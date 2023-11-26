@@ -1,0 +1,5 @@
+https://files.allencell.org/api/2.0/file/download?collection=cellviewer-2-0&id=F3273
+https://files.allencell.org/api/2.0/file/download?collection=cellviewer-2-0&id=F16254
+https://files.allencell.org/api/2.0/file/download?collection=cellviewer-2-0&id=F3401
+https://files.allencell.org/api/2.0/file/download?collection=cellviewer-2-0&id=F3142
+https://files.allencell.org/api/2.0/file/download?collection=cellviewer-2-0&id=F2974
