@@ -73,9 +73,7 @@ def coloring(seg, coords, cols, cmap):
 
 method = 'deepcell_membrane-0.12.6'
 axis = 'XY'
-# segmentation = pickle.load(bz2.BZ2File(
-# 	f'/data/3D/IMC_3D/florida-3d-imc/a296c763352828159f3adfa495becf3e/original/mask_{method}_matched_stack_{axis}_0.0.pkl',
-# 	'r')).astype(np.int64)
+
 segmentation = pickle.load(bz2.BZ2File(
 	f'/data/3D/IMC_3D/florida-3d-imc/a296c763352828159f3adfa495becf3e/original/mask_{method}_matched_3D_final_0.0.pkl',
 	'r')).astype(np.int64)

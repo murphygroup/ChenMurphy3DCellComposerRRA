@@ -65,8 +65,8 @@ def cell_coloring(cell_2D):
 				color_2D_array[i, j] = 0  # Set background color to black
 	return color_2D_array
 # Load your 2D array
-# axes = ['XY', 'YZ', 'XZ']
-axes = ['XY']
+axes = ['XY', 'YZ', 'XZ']
+# axes = ['XY']
 method = 'deepcell_membrane-0.12.6'
 save_dir = '/home/hrchen/Documents/Research/hubmap/script/2D-3D/fig'
 for axis in axes:
@@ -122,33 +122,6 @@ for axis in axes:
 		plt.savefig(f'/home/hrchen/Documents/Research/hubmap/script/2D-3D/fig/2D_{axis}_{i}', bbox_inches='tight', dpi=100,
 		            pad_inches=0, transparent=True)
 		plt.clf()
-
-#
-# from PIL import Image, ImageDraw
-#
-# # Create the first image with a red square
-# img1 = Image.new('RGB', (100, 100), color='white')
-# draw1 = ImageDraw.Draw(img1)
-# draw1.rectangle([20, 20, 80, 80], fill='red')
-#
-# # Create the second image with a blue square
-# img2 = Image.new('RGB', (100, 100), color='white')
-# draw2 = ImageDraw.Draw(img2)
-# draw2.rectangle([20, 20, 80, 80], fill='blue')
-#
-# # Create a new empty white image
-# final_img = Image.new('RGB', (120, 120), color='white')
-#
-# # Paste the first image, slightly offset
-# final_img.paste(img1, (10, 10))
-#
-# # Paste the second image, with more offset to create a "shadow" or "3D" effect
-# final_img.paste(img2, (20, 20))
-#
-# # Save the final image
-# final_img.save('/home/hrchen/Documents/Research/hubmap/script/2D-3D/fig/stacked_image.jpg')
-#
-#
 
 
 

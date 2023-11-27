@@ -30,10 +30,7 @@ def find_neighbors(segmentation, i, j, k):
 
 
 def color_cells(segmentation, cell_coords, cmap):
-	# Unique labels representing different cells
-	# labels = np.unique(segmentation)
-	# labels = labels[labels != 0]  # Assuming 0 is background or not a cell
-	
+
 	# Dictionary to store color assignments
 	color_assignments = {}
 	
@@ -66,21 +63,18 @@ def coloring(seg, coords, cols, cmap):
 	return seg_colored
 
 # Example 3D numpy array
-# color_map = ['red', 'green', 'blue', 'yellow', 'cyan', 'magenta', 'orange', 'purple', 'brown']
 methods = ['deepcell_membrane-0.12.6', 'CellProfiler', 'cellpose-2.2.2_2D-3D', '3DCellSeg']
-# methods = []
 
 for method in methods:
 	color_map = ['red', 'green', 'blue', 'yellow', 'cyan', 'magenta', 'orange']
 	try:
-		segmentation = pickle.load(bz2.BZ2File(f'/data/3D/IMC_3D/florida-3d-imc/a296c763352828159f3adfa495becf3e/original/mask_{method}_matched_3D_final_0.3.pkl', 'r')).astype(np.int64)
+		segmentation = pickle.load(bz2.BZ2File(f'./data/IMC_3D/florida-3d-imc/a296c763352828159f3adfa495becf3e/original/mask_{method}_matched_3D_final_0.3.pkl', 'r')).astype(np.int64)
 	except:
-		segmentation = pickle.load(bz2.BZ2File(f'/data/3D/IMC_3D/florida-3d-imc/a296c763352828159f3adfa495becf3e/original/mask_{method}_matched_3D_final_0.0.pkl', 'r')).astype(np.int64)
+		segmentation = pickle.load(bz2.BZ2File(f'./data/IMC_3D/florida-3d-imc/a296c763352828159f3adfa495becf3e/original/mask_{method}_matched_3D_final_0.0.pkl', 'r')).astype(np.int64)
 	segmentation = segmentation[:,350:450,350:450]
 	cell_coords = get_indices_pandas(segmentation)[1:]
 	
 	cell_colors = color_cells(segmentation, cell_coords, color_map)
 	segmentation_colored = coloring(segmentation, cell_coords, cell_colors, color_map)
-	pickle.dump(segmentation_colored, bz2.BZ2File(f'/data/3D/IMC_3D/florida-3d-imc/a296c763352828159f3adfa495becf3e/original/mask_{method}_matched_3D_final_colored.pkl', 'w'))
+	pickle.dump(segmentation_colored, bz2.BZ2File(f'./data/IMC_3D/florida-3d-imc/a296c763352828159f3adfa495becf3e/original/mask_{method}_matched_3D_final_colored.pkl', 'w'))
 	
-	print(cell_colors)

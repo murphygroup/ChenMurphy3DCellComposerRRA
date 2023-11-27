@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-save_dir = '/home/hrchen/Documents/Research/hubmap/script/2D-3D/fig'
+save_dir = './fig'
 
 # Your color, marker and method information
 cmap = ['deepskyblue', 'darkred', 'darkgoldenrod', 'darkkhaki', 'darkslateblue', 'darksalmon', 'chocolate', 'darkgoldenrod', 'darkcyan', 'darkgrey']

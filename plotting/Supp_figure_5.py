@@ -4,20 +4,20 @@ import glob
 import random
 random.seed(3)
 
-data_type = 'IMC_3D'
-data_dir = f'/data/3D/{data_type}'
-IMC_structure_list = ['d3130f4a89946cc6b300b115a3120b7a','cd880c54e0095bad5200397588eccf81','a296c763352828159f3adfa495becf3e']
-IMC_structure_list_vis = ['SPLEEN', 'Thymus','Lymph Node']
-figure_dir = '/home/hrchen/Documents/Research/hubmap/script/2D-3D/fig'
+data_type = 'AICS'
+data_dir = f'./data/{data_type}'
+AICS_structure_list = ['golgi', 'mito', 'tublin', 'actin', 'lysosome']
+AICS_structure_list_vis = ['Golgi apparatus', 'Mitochondria', 'Microntubules', 'Alpha-actin', 'Lysosomes']
+figure_dir = './fig'
 
 # Create a figure and a set of subplots - 2 rows, 3 columns
-fig, axs = plt.subplots(1, 3, figsize=(15, 5))  # Adjust figsize as needed
+fig, axs = plt.subplots(2, 3, figsize=(15, 10))  # Adjust figsize as needed
 
-for i, IMC_structure in enumerate(IMC_structure_list):
+for i, AICS_structure in enumerate(AICS_structure_list):
     # Find the subplot location
-    ax1 = axs[i]
+    ax1 = axs[i//3, i%3]
 
-    mask_dir_list = sorted(glob.glob(f'{data_dir}/**/{IMC_structure}/**/original', recursive=True))
+    mask_dir_list = sorted(glob.glob(f'{data_dir}/AICS_{AICS_structure}/**/original', recursive=True))
     mask_dir = random.choice(mask_dir_list)
     method = 'deepcell_membrane-0.12.6'
 
@@ -28,17 +28,17 @@ for i, IMC_structure in enumerate(IMC_structure_list):
     cell_num_JI_image = np.load(f'{mask_dir}/cell_num_JI.npy')
     quality_score = np.load(f'{mask_dir}/metrics/quality_scores_JI_{method}.npy')
 
-    labels = [round(i * 0.1, 1) for i in range(8)]
-    bins = np.arange(0, 0.9, 0.1)
+    labels = [round(i * 0.1, 1) for i in range(10)]
+    bins = np.arange(0, 1.1, 0.1)
     counts, _ = np.histogram(JI_list_list, bins)
     cumulative_counts = np.cumsum(counts[::-1])[::-1]
 
     # Plotting for this structure
-    ax1.plot(np.arange(0, 0.8, 0.1), cumulative_counts, marker='^', color='blue')
+    ax1.plot(np.arange(0, 1.0, 0.1), cumulative_counts, marker='^', color='blue')
     ax1.set_xlabel('Jaccard Index Threshold')
     ax1.set_ylabel('Number of Pairs of Matched 2D Cells', color='blue')
     ax1.tick_params(axis='y', labelcolor='blue')
-    ax1.set_xticks(np.arange(0, 0.8, 0.1))
+    ax1.set_xticks(np.arange(0, 1.0, 0.1))
     ax1.invert_xaxis()
 
     # Secondary y-axis
@@ -55,8 +55,10 @@ for i, IMC_structure in enumerate(IMC_structure_list):
     ax3.tick_params('y', colors='r')
 
     # Set the title for each subplot
-    ax1.set_title(IMC_structure_list_vis[i])
+    ax1.set_title(AICS_structure_list_vis[i])
 
+# Adjust layout
+axs[1, 2].axis('off')
 
 plt.tight_layout()
 
