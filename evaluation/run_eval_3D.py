@@ -1,16 +1,11 @@
-import numpy as np
 import glob
 from os.path import join
 import os
-from skimage.io import imread, imsave
-import bz2
-import pickle
-import matplotlib.pyplot as plt
 if __name__ == '__main__':
-	#data_dir = '/home/haoranch/projects/HuBMAP/2D-3D/data/IMC_3D'
+	data_dir = '/home/haoranch/projects/HuBMAP/2D-3D/data/IMC_3D'
 	data_dir = '/home/haoranch/projects/HuBMAP/2D-3D/data/AICS'
 	img_3D_dir_list = sorted(glob.glob(join(data_dir, '**', 'original*'), recursive=True)) + sorted(glob.glob(join(data_dir, '**', 'random_gaussian_*'), recursive=True))
-	#methods = ['artificial', 'aics_classic', 'cellpose', 'CellProfiler', 'CellX', 'cellsegm', 'deepcell_membrane_new', 'deepcell_cytoplasm_new', 'cellpose_new', 'cellpose', 'deepcell_membrane', 'deepcell_cytoplasm']
+	# methods = ['artificial', 'aics_classic', 'cellpose', 'CellProfiler', 'CellX', 'cellsegm', 'deepcell_membrane_new', 'deepcell_cytoplasm_new', 'cellpose_new', 'cellpose', 'deepcell_membrane', 'deepcell_cytoplasm']
 	methods = ['deepcell_membrane-0.12.6','cellstitch','aics_ml']
 	#methods = ['cellstitch']
 	for img_dir in img_3D_dir_list:

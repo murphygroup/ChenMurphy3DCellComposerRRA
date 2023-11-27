@@ -2,17 +2,15 @@ import subprocess
 import os
 
 
-def run_download_hiPSC_script():
-	script_path = './downloading/download_hiPSC.py'
-	print('Downloading 3D hiPSC multiplexed cell culture images..')
-	# Execute the script
-	subprocess.run(['python', script_path])
-
-
 def run_download_IMC_script():
 	script_path = './downloading/download_IMC.py'
 	print('Downloading 3D IMC multiplexed tissue images..')
-	# Execute the script
+	subprocess.run(['python', script_path])
+	
+	
+def run_download_hiPSC_script():
+	script_path = './downloading/download_hiPSC.py'
+	print('Downloading 3D hiPSC multiplexed cell culture images..')
 	subprocess.run(['python', script_path])
 
 
@@ -60,25 +58,46 @@ def run_segmentation_2D_hiPSC_script():
 
 def run_segmentation_3D_IMC_script():
 	script_path = './segmentation_3D/run_segmentation_3D.py'
-	print('Perturbing 3D IMC multiplexed tissue images w/ Gaussian noise..')
+	print('Segmenting 3D cells in IMC images//')
 	# Execute the script
 	subprocess.run(['python', script_path, f'{os.getcwd()}/data/IMC_3D'])
 
 
 def run_segmentation_3D_hiPSC_script():
 	script_path = './segmentation_3D/run_segmentation_3D.py'
-	print('Perturbing 3D hiPSC multiplexed cell culture images w/ Gaussian noise..')
+	print('Segmenting 3D cells in hiPSC images..')
 	# Execute the script
 	subprocess.run(['python', script_path, f'{os.getcwd()}/data/AICS'])
 
 
-# Run the function
+def run_evaluation_IMC_script():
+	script_path = './evaluation/run_eval_3D.py'
+	print('Evaluating 3D cell segmentations in IMC images..')
+	# Execute the script
+	subprocess.run(['python', script_path, f'{os.getcwd()}/data/IMC_3D'])
+
+
+def run_evaluation_hiPSC_script():
+	script_path = './evaluation/run_eval_3D.py'
+	print('Evaluating 3D cell segmentations in hiPSC images..')
+	# Execute the script
+	subprocess.run(['python', script_path, f'{os.getcwd()}/data/AICS'])
+	
+
+def run_plotting_script():
+	script_path = './plotting/run_plotting.py'
+	print('Plotting figures..')
+	# Execute the script
+	subprocess.run(['python', script_path, f'{os.getcwd()}/data/IMC_3D'])
+
+	
+
 if __name__ == "__main__":
 	print("Current working directory:", os.getcwd())
-	# run_download_IMC_script()
-	# run_download_hiPSC_script()
-	# run_preprocess_IMC_script()
-	# run_preprocess_hiPSC_script()
+	run_download_IMC_script()
+	run_download_hiPSC_script()
+	run_preprocess_IMC_script()
+	run_preprocess_hiPSC_script()
 	run_perturb_IMC_script()
 	run_perturb_hiPSC_script()
 	run_segmentation_2D_IMC_script()
@@ -87,12 +106,5 @@ if __name__ == "__main__":
 	run_segmentation_3D_hiPSC_script()
 	run_evaluation_IMC_script()
 	run_evaluation_hiPSC_script()
-	run_plotting_IMC_script()
-	run_plotting_hiPSC_script()
-
-# from skimage.io import imread
-# import numpy as np
-#
-# imread('/home/hrchen/Documents/Research/hubmap/script/2D-3D/ChenMurphy3DCellComposerRRA/data/AICS/AICS_golgi/AICS_15978/random_gaussian_10/nucleus.tif')
-# imread('/data/3D/AICS/AICS_golgi/AICS_15978/original/nucleus.tif')
-# imread('/data/3D/AICS/AICS_golgi/AICS_15978/random_gaussian_2/nucleus.tif')
+	run_plotting_script()
+	
