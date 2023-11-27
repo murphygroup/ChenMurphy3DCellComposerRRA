@@ -2,3 +2,4 @@ __pycache__/
 CellX/
 cellsegm/
 CellSegm/
+.idea/
