@@ -340,20 +340,13 @@ def standardize_3d_array(input_array):
 	return scaled_3d_array
 
 
-# def single_method_eval_3D(img, mask, output_dir: Path) -> Tuple[Dict[str, Any], float, float]:
 if __name__ == '__main__':
  
-	# print("Calculating single-method metrics v1.5 for", img.path)
-	# with open("/home/hrchen/Documents/Research/hubmap/github_lab/SPRM/sprm/pca_3D.pickle", "rb") as f:
-	# 	PCA_model = pickle.load(f)
-	# get compartment masks
+
 	data_dir = sys.argv[1]
 	method = sys.argv[2]
 	JI_thre = sys.argv[3]
-	
-	# data_dir = '/data/3D/IMC_3D/florida-3d-imc/d3130f4a89946cc6b300b115a3120b7a/original'
-	# method = 'deepcell_membrane-0.12.6'
-	# JI_thre = '0.0'
+
 
 	if os.path.exists(f'{data_dir}/mask_{method}_matched_3D_final_{JI_thre}.pkl'):
 		cell_matched_mask = pickle.load(bz2.BZ2File(f'{data_dir}/mask_{method}_matched_3D_final_{JI_thre}.pkl', 'r'))
@@ -468,9 +461,7 @@ if __name__ == '__main__':
 						cell_size_CV + 1
 				)
 				
-				#metrics[channel_names[channel]][
-				#	"AvgCellSizeinCubicMicrons"
-				#] = simple_avg_microns
+
 				metrics[channel_names[channel]][
 					"WeightedAvgCellSizeinCubicMicrons"
 				] = weighted_avg_microns

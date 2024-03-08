@@ -1,10 +1,6 @@
-import os.path
 import os
-import importlib.resources
-import pickle
 import re
-import xml.etree.ElementTree as ET
-from pathlib import Path
+
 from typing import Any, Dict, List, Tuple
 import numpy as np
 import sys
@@ -68,7 +64,6 @@ def fraction(img_bi, mask_bi):
 
 def foreground_separation(img_thre):
 	
-	# img_thre = img_thresholded[50]
 	contour_ref = img_thre.copy()
 	img_thre = -img_thre + 1
 	img_thre = closing(img_thre, disk(1))
@@ -76,31 +71,16 @@ def foreground_separation(img_thre):
 
 	img_thre = closing(img_thre, disk(2))
 	
-
-
-	# img_thre = -img_thre + 1
-	# img_thre = closing(img_thre, disk(10))
-	# img_thre = -img_thre + 1
-	#
 	img_thre = closing(img_thre, disk(5))
 
 
-	# img_thre = -img_thre + 1
-
 	img_thre = area_closing(img_thre, 20000, connectivity=2)
-
-	#
-	#
-	#
 	contour_ref = contour_ref.astype(float)
 	img_thre = img_thre.astype(float)
 	img_binary = MorphGAC(
 		-contour_ref + 1, 5, -img_thre + 1, smoothing=1, balloon=0.8, threshold=0.5
 	)
 	img_binary = -img_binary + 1
-	# imsave(f'{os.path.dirname(data_dir)}/original/img_thre.tif', img_binary.astype(np.int8))
-
-	# imsave(f'{os.path.dirname(data_dir)}/original/img_binary.tif', img_binary.astype(np.int8))
 
 	return img_binary
 
@@ -323,20 +303,13 @@ def denoise_image(image, kernel_size=(3, 3)):
 
 	return denoised_image
 
-# def single_method_eval_3D(img, mask, output_dir: Path) -> Tuple[Dict[str, Any], float, float]:
 if __name__ == '__main__':
  
-	# print("Calculating single-method metrics v1.5 for", img.path)
-	# with open("/home/hrchen/Documents/Research/hubmap/github_lab/SPRM/sprm/pca_3D.pickle", "rb") as f:
-	# 	PCA_model = pickle.load(f)
-	# get compartment masks
+
 	data_dir = sys.argv[1]
 	method = sys.argv[2]
 	JI_thre = sys.argv[3]
-	# data_dir = '/data/3D/AICS/AICS_actin/AICS-7_11536/original'
-	# method = 'deepcell_membrane-0.12.6'
-	# method = 'aics_ml'
-	# JI_thre = '0.0'
+
 	
 	if not os.path.exists(f'{data_dir}/metrics'):
 		os.makedirs(f'{data_dir}/metrics')
@@ -363,41 +336,17 @@ if __name__ == '__main__':
 
 	# separate image foreground background
 	if not os.path.exists(f'{os.path.dirname(data_dir)}/original/img_binary.pkl'):
-	# if True:
-	# 	nucleus = thresholding(imread(f'{os.path.dirname(data_dir)}/original/nucleus.tif'))
-	# 	try:
-	# 		cytoplasm = thresholding(imread(f'{os.path.dirname(data_dir)}/original/cytoplasm.tif'))
-	# 	except:
-	# 		pass
-	# 	membrane = thresholding(imread(f'{os.path.dirname(data_dir)}/original/membrane.tif'))
-	# 	try:
-	# 		img_thresholded = nucleus + cytoplasm + membrane
-	# 	except:
-	# 		img_thresholded = nucleus + membrane
-	# 	# img_thresholded = thresholding(img_input_channel)
-	# 	img_thresholded = np.sign(img_thresholded)
-	# 	imsave(f'{os.path.dirname(data_dir)}/original/img_thresholded.tif', img_thresholded.astype(np.int8))
+
 		nucleus = imread(f'{os.path.dirname(data_dir)}/original/nucleus.tif')
 		cytoplasm = imread(f'{os.path.dirname(data_dir)}/original/cytoplasm.tif')
 		membrane = imread(f'{os.path.dirname(data_dir)}/original/membrane.tif')
 		nucleus_thresholded = np.stack([thresholding(slice_2d) for slice_2d in nucleus], axis=0)
 		cytoplasm_thresholded = np.stack([thresholding(slice_2d) for slice_2d in cytoplasm], axis=0)
 		membrane_thresholded = np.stack([thresholding(slice_2d) for slice_2d in membrane], axis=0)
-		# nucleus_thresholded_denoised = np.sign(np.stack([denoise_image(slice_2d) for slice_2d in nucleus_thresholded.astype(float)], axis=0))
-		# cytoplasm_thresholded_denoised = np.stack([denoise_image(slice_2d) for slice_2d in cytoplasm_thresholded.astype(float)], axis=0)
-		# membrane_thresholded_denoised = np.stack([denoise_image(slice_2d) for slice_2d in membrane_thresholded.astype(float)], axis=0)
-	
+
 		img_thresholded = nucleus_thresholded + cytoplasm_thresholded + membrane_thresholded
-		# img_thresholded = nucleus_thresholded_denoised + cytoplasm_thresholded_denoised + membrane_thresholded_denoised
-		# img_input_channel = standardize_3d_array(nucleus) + standardize_3d_array(cytoplasm) + standardize_3d_array(membrane)
-		# img_thresholded = thresholding(img_input_channel)
-		# img_thresholded = np.stack([thresholding(slice_2d) for slice_2d in img_input_channel], axis=0)
-		
+
 		img_thresholded = np.sign(img_thresholded)
-		# img_thresholded_denoised = np.stack([denoise_image(slice_2d) for slice_2d in img_thresholded], axis=0)
-		# nucleus_thresholded_denoised = np.stack([denoise_image(slice_2d) for slice_2d in nucleus_thresholded.astype(float)], axis=0)
-		
-		# imsave(f'{os.path.dirname(data_dir)}/original/img_thresholded.tif', img_thresholded.astype(np.int8))
 
 		img_binary_pieces = []
 		for z in range(img_thresholded.shape[0]):
@@ -413,8 +362,7 @@ if __name__ == '__main__':
 		img_binary = pickle.load(bz2.BZ2File(f'{os.path.dirname(data_dir)}/original/img_binary.pkl','r'))
 
 
-	# imsave(f'{data_dir}/img_binary.tif', img_binary.astype(np.uint8))
-	# img_binary = imread(f'{data_dir}/img_binary.tif')
+
 
 	# set mask channel names
 	channel_names = [
@@ -490,8 +438,7 @@ if __name__ == '__main__':
 				metrics[channel_names[channel]][
 					"FractionOfFirstPCForegroundOutsideCells"
 				] = foreground_PCA
-				# print(metrics)
-				# get cell type labels
+
 				cell_type_labels = cell_type(current_mask, img_channels)
 				
 			else:
@@ -514,7 +461,6 @@ if __name__ == '__main__':
 				] = avg_cell_silhouette
 	
 		
-		# print(metrics_flat)
 		metrics_flat = np.expand_dims(flatten_dict(metrics), 0)
 		np.save(f'{data_dir}/metrics/metrics_{method}_{JI_thre}.npy', metrics_flat)
 	

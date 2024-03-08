@@ -38,8 +38,7 @@ python ./single_method_eval_3D.py {img_dir} {method} {JI_threshold}
 						file.write(batch_script)
 
 					subprocess.run(['sbatch', script_file])
-				#else:
-				#	print(f"Skipping submission for {file_path} as it exists and is recent.")
+
 
 
 
