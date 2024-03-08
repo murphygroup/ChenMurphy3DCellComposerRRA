@@ -1,5 +1,10 @@
+import os.path
 import os
+import importlib.resources
+import pickle
 import re
+import xml.etree.ElementTree as ET
+from pathlib import Path
 from typing import Any, Dict, List, Tuple
 import numpy as np
 import sys
@@ -62,6 +67,8 @@ def fraction(img_bi, mask_bi):
 
 
 def foreground_separation(img_thre):
+	# img_thre = img_thresholded[0]
+	# imsave(f'{os.path.dirname(data_dir)}/original/img_thre.png', img_thre.astype(np.int8))
 
 	contour_ref = img_thre.copy()
 
@@ -70,6 +77,7 @@ def foreground_separation(img_thre):
 	img_thre = -img_thre + 1
 	img_thre = closing(img_thre, disk(2))
 	img_thre = -img_thre + 1
+	# imsave(f'{os.path.dirname(data_dir)}/original/img_thre.png', img_thre.astype(np.int8))
 
 
 	img_thre = closing(img_thre, disk(10))
@@ -89,6 +97,7 @@ def foreground_separation(img_thre):
 	)
 	img_binary = area_closing(img_binary, 1000, connectivity=2)
 	img_binary = -img_binary + 1
+	# imsave(f'{os.path.dirname(data_dir)}/original/img_thre.png', img_binary.astype(np.int8))
 
 	return img_binary
 
@@ -174,6 +183,7 @@ def cell_size_uniformity(mask):
 		cell_size_current = len(cell_coord[i][0])
 		if cell_size_current != 0:
 			cell_sizes.append(cell_size_current)
+	#cell_size_std = np.std(np.expand_dims(np.array(cell_size), 1))
 	cell_sizes = np.expand_dims(np.array(cell_sizes), 1)
 	cell_size_std = np.std(cell_sizes)
 	cell_size_mean = np.mean(cell_sizes)
@@ -330,11 +340,20 @@ def standardize_3d_array(input_array):
 	return scaled_3d_array
 
 
+# def single_method_eval_3D(img, mask, output_dir: Path) -> Tuple[Dict[str, Any], float, float]:
 if __name__ == '__main__':
  
+	# print("Calculating single-method metrics v1.5 for", img.path)
+	# with open("/home/hrchen/Documents/Research/hubmap/github_lab/SPRM/sprm/pca_3D.pickle", "rb") as f:
+	# 	PCA_model = pickle.load(f)
+	# get compartment masks
 	data_dir = sys.argv[1]
 	method = sys.argv[2]
 	JI_thre = sys.argv[3]
+	
+	# data_dir = '/data/3D/IMC_3D/florida-3d-imc/d3130f4a89946cc6b300b115a3120b7a/original'
+	# method = 'deepcell_membrane-0.12.6'
+	# JI_thre = '0.0'
 
 	if os.path.exists(f'{data_dir}/mask_{method}_matched_3D_final_{JI_thre}.pkl'):
 		cell_matched_mask = pickle.load(bz2.BZ2File(f'{data_dir}/mask_{method}_matched_3D_final_{JI_thre}.pkl', 'r'))
@@ -344,7 +363,7 @@ if __name__ == '__main__':
 		nuclear_matched_mask = pickle.load(bz2.BZ2File(f'{data_dir}/nuclear_mask_{method}_matched_3D_final.pkl', 'r'))
 	else:
 		metrics_flat = np.zeros(14)
-		metrics_flat[-1] = -1
+		metrics_flat[-1] = -1 # lowest value possible if empty segmentation
 		metrics_flat[-4] = -1
 		metrics_flat = metrics_flat.reshape(1, -1)
 		np.save(f'{data_dir}/metrics/metrics_{method}_{JI_thre}.npy', metrics_flat)
@@ -359,10 +378,13 @@ if __name__ == '__main__':
 
 	# separate image foreground background
 	if not os.path.exists(f'{os.path.dirname(data_dir)}/original/img_binary.pkl'):
+	# if True:
 		nucleus = imread(f'{os.path.dirname(data_dir)}/original/nucleus.tif')
 		cytoplasm = imread(f'{os.path.dirname(data_dir)}/original/cytoplasm.tif')
 		membrane = imread(f'{os.path.dirname(data_dir)}/original/membrane.tif')
 		img_input_channel = nucleus + cytoplasm + membrane
+		# img_input_channel = standardize_3d_array(nucleus) + standardize_3d_array(cytoplasm) + standardize_3d_array(membrane)
+		# img_thresholded = thresholding(img_input_channel)
 		img_thresholded = np.stack([thresholding(slice_2d) for slice_2d in img_input_channel], axis=0)
 	
 		img_thresholded = np.sign(img_thresholded)
@@ -370,6 +392,8 @@ if __name__ == '__main__':
 
 		img_binary_pieces = []
 		for z in range(img_thresholded.shape[0]):
+		# for z in range(10):
+			print(z)
 			img_binary_pieces.append(foreground_separation(img_thresholded[z]))
 		img_binary = np.stack(img_binary_pieces, axis=0)
 		img_binary = np.sign(img_binary)
@@ -378,6 +402,9 @@ if __name__ == '__main__':
 	else:
 		img_binary = pickle.load(bz2.BZ2File(f'{os.path.dirname(data_dir)}/original/img_binary.pkl','r'))
 
+
+	# imsave(f'{data_dir}/img_binary.tif', img_binary.astype(np.uint8))
+	# img_binary = imread(f'{data_dir}/img_binary.tif')
 
 	# set mask channel names
 	channel_names = [
@@ -404,7 +431,7 @@ if __name__ == '__main__':
 	
 				# TODO: match 3D cell and nuclei and calculate the fraction of match, assume cell and nuclei are matched for now
 	
-				# calculate number of cell per 100 cubic micron
+				# calculate number of cell per 100 squared micron
 				cell_num = len(np.unique(current_mask)) - 1
 	
 				cell_num_normalized = cell_num / micron_num * 100
@@ -413,6 +440,7 @@ if __name__ == '__main__':
 				cell_size_CV, cell_sizes_voxels = cell_size_uniformity(current_mask)
 				
 				cell_sizes_microns = [size * voxel_size for size in cell_sizes_voxels]
+				#simple_avg_microns = sum(cell_sizes_microns) / len(cell_sizes_microns)
 				weighted_avg_microns = sum(size * size for size in cell_sizes_microns) / sum(cell_sizes_microns)
 				
 				# get coverage metrics
@@ -423,6 +451,7 @@ if __name__ == '__main__':
 				foreground_CV, foreground_PCA = foreground_uniformity(
 					img_binary, mask_binary, img_channels
 				)
+				# background_CV, background_PCA = background_uniformity(img_binary, img_channels)
 				metrics[channel_names[channel]][
 					"NumberOfCellsPer100CubicMicrons"
 				] = cell_num_normalized
@@ -439,6 +468,9 @@ if __name__ == '__main__':
 						cell_size_CV + 1
 				)
 				
+				#metrics[channel_names[channel]][
+				#	"AvgCellSizeinCubicMicrons"
+				#] = simple_avg_microns
 				metrics[channel_names[channel]][
 					"WeightedAvgCellSizeinCubicMicrons"
 				] = weighted_avg_microns
@@ -449,7 +481,6 @@ if __name__ == '__main__':
 				metrics[channel_names[channel]][
 					"FractionOfFirstPCForegroundOutsideCells"
 				] = foreground_PCA
-
 				cell_type_labels = cell_type(current_mask, img_channels)
 				
 			else:
@@ -460,7 +491,6 @@ if __name__ == '__main__':
 				avg_cell_CV = np.average(cell_CV[0])
 				avg_cell_fraction = np.average(cell_fraction[0])
 				avg_cell_silhouette = np.average(cell_silhouette)
-				# avg_cell_silhouette = 1
 				metrics[channel_names[channel]][
 					"1/(AvgOfWeightedAvgCVMeanCellIntensitiesOver1~10NumberOfClusters+1)"
 				] = 1 / (avg_cell_CV + 1)
@@ -477,9 +507,10 @@ if __name__ == '__main__':
 	
 	else:
 		metrics_flat = np.zeros(14) # no cell segmented
-		metrics_flat[-1] = -1 # lowest value
+		metrics_flat[-1] = -1 # lowest value possible if empty segmentation
 		metrics_flat[-4] = -1
 		metrics_flat = metrics_flat.reshape(1, -1)
 		print(metrics_flat)
 		np.save(f'{data_dir}/metrics/metrics_{method}_{JI_thre}.npy', metrics_flat)
 		raise ValueError("No cell segmented")
+

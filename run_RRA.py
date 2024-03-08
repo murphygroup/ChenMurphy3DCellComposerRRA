@@ -78,7 +78,7 @@ def run_evaluation_IMC_script():
 
 
 def run_evaluation_hiPSC_script():
-	script_path = './evaluation/run_eval_3D.py'
+	script_path = './evaluation/run_eval_3D_AICS.py'
 	print('Evaluating 3D cell segmentations in hiPSC images..')
 	# Execute the script
 	subprocess.run(['python', script_path, f'{os.getcwd()}/data/AICS'])

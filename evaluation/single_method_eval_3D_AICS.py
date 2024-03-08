@@ -23,13 +23,7 @@ from skimage.io import imread, imsave
 import glob
 import pickle
 import bz2
-"""
-Companion to SPRM.py
-Package functions that evaluate a single segmentation method
-Author: Haoran Chen and Ted Zhang
-Version: 1.5
-04/21/2022
-"""
+
 
 schema_url_pattern = re.compile(r"\{(.+)\}OME")
 
@@ -336,13 +330,13 @@ if __name__ == '__main__':
 	# with open("/home/hrchen/Documents/Research/hubmap/github_lab/SPRM/sprm/pca_3D.pickle", "rb") as f:
 	# 	PCA_model = pickle.load(f)
 	# get compartment masks
-	# data_dir = sys.argv[1]
-	# method = sys.argv[2]
-	# JI_thre = sys.argv[3]
-	data_dir = '/data/3D/AICS/AICS_actin/AICS-7_11536/original'
-	method = 'deepcell_membrane-0.12.6'
+	data_dir = sys.argv[1]
+	method = sys.argv[2]
+	JI_thre = sys.argv[3]
+	# data_dir = '/data/3D/AICS/AICS_actin/AICS-7_11536/original'
+	# method = 'deepcell_membrane-0.12.6'
 	# method = 'aics_ml'
-	JI_thre = '0.3'
+	# JI_thre = '0.0'
 	
 	if not os.path.exists(f'{data_dir}/metrics'):
 		os.makedirs(f'{data_dir}/metrics')
@@ -355,7 +349,7 @@ if __name__ == '__main__':
 	else:
 		metrics_flat = np.zeros(15)
 		metrics_flat[-1] = -1
-		metrics_flat[-4] = -1
+		metrics_flat[-4] = -1	
 		metrics_flat = metrics_flat.reshape(1, -1)
 		np.save(f'{data_dir}/metrics/metrics_{method}_{JI_thre}.npy', metrics_flat)
 		raise ValueError("No mask generated")
@@ -531,9 +525,3 @@ if __name__ == '__main__':
 		metrics_flat = metrics_flat.reshape(1, -1)
 		np.save(f'{data_dir}/metrics/metrics_{method}_{JI_thre}.npy', metrics_flat)
 		raise ValueError("No cell segmented")
-
-# generate quality score
-	# quality_score = get_quality_score(metrics_flat, PCA_model)
-	# metrics["QualityScore"] = quality_score
-	# print(quality_score)
-	# return metrics, fraction_background, 1 / (background_CV + 1), background_PCA
