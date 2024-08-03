@@ -10,7 +10,7 @@ import zipfile
 # URLs of the files to be downloaded
 file_urls = [
     "https://zenodo.org/record/12859553/files/evaluation_metrics.zip?download=1"
-    # "https://zenodo.org/record/12859553/files/segmentation_masks.zip?download=1"
+    "https://zenodo.org/record/12859553/files/segmentation_masks.zip?download=1"
 ]
 
 # Download each file to the ../data directory and unzip
