@@ -84,6 +84,8 @@ def move_supp_data():
 
 def create_optimal_JI_files(data_type):
 	data_dir = f'../data/masks/{data_type}'
+	pca_dir = '../data/PCA_model'
+
 	methods_IMC = ['deepcell_membrane-0.12.6', 'deepcell_cytoplasm-0.12.6', 'cellpose-2.2.2', 'aics_classic', 'CellProfiler', 'CellX',
 	           'cellsegm']
 	methods_AICS = ['deepcell_membrane-0.12.6', 'cellpose-2.2.2']
@@ -94,6 +96,8 @@ def create_optimal_JI_files(data_type):
 		methods = methods_AICS
 		
 	noise_list = ['original', 'random_gaussian_1', 'random_gaussian_2', 'random_gaussian_3']
+	ss, pca = pickle.load(open(join(pca_dir, f'pca_{data_type}.pkl'), 'rb'))
+
 	
 	for noise in noise_list:
 		img_dir_list = sorted(glob.glob(f'{data_dir}/**/{noise}', recursive=True))
@@ -119,3 +123,4 @@ move_metrics()
 move_supp_data()
 create_optimal_JI_files('IMC_3D')
 create_optimal_JI_files('AICS')
+print('completed!')

@@ -1,10 +1,12 @@
 import subprocess
 import os
-
+import time
 plotting_dir = os.path.dirname(os.path.abspath(__file__))
 
 os.chdir(plotting_dir)
 
+print('installing necessary packages...')
+time.sleep(1)
 # Run 'pip install -r requirements.txt'
 requirements_file = os.path.join(plotting_dir, 'requirements.txt')
 
@@ -12,7 +14,7 @@ if os.path.exists(requirements_file):
     subprocess.run(['pip', 'install', '-r', 'requirements.txt'], check=True)
 else:
     print("requirements.txt file not found.")
-
+print('completed!')
 
 if not os.path.exists('../fig'):
     os.makedirs('../fig')
