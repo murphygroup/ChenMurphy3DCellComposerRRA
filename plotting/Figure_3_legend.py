@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 
-save_dir = './fig'
+save_dir = '../fig'
+print("plotting Fig 3's legend...")
 
 # Your color, marker and method information
 cmap = ['deepskyblue', 'darkred', 'darkgoldenrod', 'darkkhaki', 'darkslateblue', 'darksalmon', 'chocolate', 'darkgoldenrod', 'darkcyan', 'darkgrey']
@@ -38,5 +39,6 @@ ax.axis('off')
 plt.tight_layout(rect=[0, 0.3, 1, 1])
 
 # plt.show()
-plt.savefig(f'{save_dir}/legends.png', dpi=500)
+plt.savefig(f'{save_dir}/Fig_3_legends.png', dpi=500)
 plt.clf()
+print('completed!')

@@ -5,8 +5,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.colors
 
+print('plotting Supp Fig 1...')
+
 JI_threshold = 0.2
-IMCpath = './data/IMC_3D/florida-3d-imc/a296c763352828159f3adfa495becf3e'
+IMCpath = '../data/masks/IMC_3D/florida-3d-imc/a296c763352828159f3adfa495becf3e'
 IMAGEpath = IMCpath
 
 mask_2D_XY_stack = pickle.load(bz2.BZ2File(f'{IMAGEpath}/original/mask_aics_classic_matched_3D_final_0.0.pkl', 'rb'))
@@ -66,7 +68,7 @@ def create_slice_fig_new(volume, slice_type, index=None, repaired_coords=None, f
     ax2.axis('off')
 
     plt.tight_layout()
-    plt.savefig(f'/home/hrchen/Documents/Research/hubmap/script/2D-3D/fig/supp_fig_1_2D_{slice_type}.png', dpi=300)
+    plt.savefig(f'../fig/Supp_Fig_1_2D_{slice_type}.png', dpi=300)
 
 def isolate_cell(segmentation, cell_index):
     isolated_cell = np.zeros_like(segmentation)
@@ -127,3 +129,4 @@ create_slice_fig_new(cropped_cell_mask_repair, 'repaired', vis_coords)
 create_slice_fig_new(cropped_cell_mask_XY, 'Z_stack', vis_coords)
 create_slice_fig_new(cropped_cell_mask_XZ, 'Y_stack', vis_coords)
 create_slice_fig_new(cropped_cell_mask_YZ, 'X_stack', vis_coords)
+print('completed!')

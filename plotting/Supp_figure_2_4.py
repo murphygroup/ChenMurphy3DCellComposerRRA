@@ -6,10 +6,12 @@ import pickle
 from os.path import join
 import matplotlib.pyplot as plt
 
+print('plotting Supp Fig 2 and Fig 4...')
+
 if __name__ == '__main__':
-	data_dir = './data'
+	data_dir = '../data/metrics'
 	datasets = ['IMC_3D', 'AICS']
-	pca_dir = './PCA_model'
+	pca_dir = '../data/PCA_model'
 	methods_IMC = ['deepcell_membrane-0.12.6', 'deepcell_cytoplasm-0.12.6', 'cellpose-2.2.2', 'aics_classic', 'CellProfiler', 'CellX',
 	           'cellsegm', 'cellpose-2.2.2_2D-3D', 'aics_ml', '3DCellSeg']
 	methods_2D = ['deepcell_membrane-0.12.6', 'deepcell_cytoplasm-0.12.6', 'cellpose-2.2.2', 'aics_classic', 'CellProfiler', 'CellX',
@@ -24,9 +26,9 @@ if __name__ == '__main__':
 			methods = methods_AICS
 		for method in methods:
 			if method in methods_2D:
-				metrics_dir_list = metrics_dir_list + sorted(glob.glob(f'{data_dir}/{dataset}/**/metrics/metrics_{method}_0.*.npy', recursive=True))
+				metrics_dir_list = metrics_dir_list + sorted(glob.glob(f'{data_dir}/{dataset}/**/metrics_{method}_0.*.npy', recursive=True))
 			else:
-				metrics_dir_list = metrics_dir_list + sorted(glob.glob(f'{data_dir}/{dataset}/**/metrics/metrics_{method}_0.0.npy', recursive=True))
+				metrics_dir_list = metrics_dir_list + sorted(glob.glob(f'{data_dir}/{dataset}/**/metrics_{method}_0.0.npy', recursive=True))
 		metrics_pieces = list()
 		for metrics_dir in metrics_dir_list:
 			current_metrics = np.load(metrics_dir)
@@ -40,8 +42,8 @@ if __name__ == '__main__':
 		pca_model = PCA(n_components=2).fit(metrics_z)
 		if pca_model.components_[1][0] < 0:
 			pca_model.components_[1] = -pca_model.components_[1]
-		print(pca_model.components_)
-		print(pca_model.explained_variance_ratio_)
+		# print(pca_model.components_)
+		# print(pca_model.explained_variance_ratio_)
 
 		pickle.dump([ss, pca_model], open(join(pca_dir, f'pca_{dataset}.pkl'), "wb"))
 	
@@ -66,5 +68,6 @@ if __name__ == '__main__':
 		ax.legend(fontsize=12)
 		ax.tick_params(axis='y', labelsize=13)
 		plt.tight_layout()
-		plt.savefig(f'./fig/{dataset}_loadings.png', dpi=500)
+		plt.savefig(f'../fig/Supp_Fig_2_and_4_{dataset}_loadings.png', dpi=500)
 
+print("completed!")

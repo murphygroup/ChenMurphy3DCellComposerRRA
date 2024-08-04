@@ -5,6 +5,9 @@ import bz2
 import pandas as pd
 import random
 random.seed(12)
+
+print('plotting figure 1 C...')
+
 def get_indices_pandas(data):
 	d = data.ravel()
 	f = lambda x: np.unravel_index(x.index, data.shape)
@@ -43,7 +46,7 @@ def color_cells(segmentation, cell_coords, cmap):
 	
 	cell_num = 1
 	for label in cell_coords.index:
-		print(cell_num)
+		# print(cell_num)
 		cell_num += 1
 		available_colors = set(cmap)
 		
@@ -73,7 +76,7 @@ def coloring(seg, coords, cols, cmap):
 method = 'deepcell_membrane-0.12.6'
 for axis in ['XY','XZ','YZ']:
 	segmentation = pickle.load(bz2.BZ2File(
-		f'/data/3D/IMC_3D/florida-3d-imc/a296c763352828159f3adfa495becf3e/original/mask_{method}_matched_stack_{axis}_0.0.pkl',
+		f'../data/masks/IMC_3D/florida-3d-imc/a296c763352828159f3adfa495becf3e/original/mask_{method}_matched_stack_{axis}_0.0.pkl',
 		'r')).astype(np.int64)
 	if axis == 'XY':
 		segmentation = segmentation[20:30, 500:550, 500:550]
@@ -140,9 +143,11 @@ for axis in ['XY','XZ','YZ']:
 	ax.set_xticks([])
 	ax.set_yticks([])
 	ax.set_zticks([])
-	ax.set_frame_on(False)
+	# ax.set_frame_on(False)
 	
-	plt.savefig(f'/home/hrchen/Documents/Research/hubmap/script/2D-3D/fig/2D_stack_{axis}', bbox_inches='tight', pad_inches=0,
+	plt.savefig(f'../fig/Fig_1_C_2D_stack_{axis}', bbox_inches='tight', pad_inches=0,
 	            transparent=True)
 	plt.clf()
+
+print('completed!')
 

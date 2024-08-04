@@ -4,11 +4,13 @@ import glob
 import random
 random.seed(3)
 
+print('plotting Supp Fig 3...')
+
 data_type = 'IMC_3D'
-data_dir = f'./data/{data_type}'
+data_dir = f'../data/metrics/{data_type}'
 IMC_structure_list = ['d3130f4a89946cc6b300b115a3120b7a','cd880c54e0095bad5200397588eccf81','a296c763352828159f3adfa495becf3e']
 IMC_structure_list_vis = ['SPLEEN', 'Thymus','Lymph Node']
-figure_dir = './fig'
+figure_dir = '../fig'
 
 # Create a figure and a set of subplots - 2 rows, 3 columns
 fig, axs = plt.subplots(1, 3, figsize=(15, 5))  # Adjust figsize as needed
@@ -61,5 +63,5 @@ for i, IMC_structure in enumerate(IMC_structure_list):
 plt.tight_layout()
 
 # Save the figure
-plt.savefig(f'{figure_dir}/{data_type}_JI_vs_cell_num.png', dpi=500)
+plt.savefig(f'{figure_dir}/Supp_Fig_3_{data_type}_JI_vs_cell_num.png', dpi=500)
 plt.close(fig)

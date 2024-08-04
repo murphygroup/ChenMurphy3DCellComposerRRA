@@ -2,9 +2,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import bz2
 import pickle
-from matplotlib.colors import ListedColormap
 import random
 random.seed(0)
+
+print('plotting Figure 1 B...')
 
 def dfs(graph, node, visited, cell_colors):
 	visited.add(node)
@@ -68,16 +69,16 @@ def cell_coloring(cell_2D):
 axes = ['XY', 'YZ', 'XZ']
 # axes = ['XY']
 method = 'deepcell_membrane-0.12.6'
-save_dir = '/home/hrchen/Documents/Research/hubmap/script/2D-3D/fig'
+save_dir = '../fig'
 for axis in axes:
 	cell_2D = pickle.load(bz2.BZ2File(
-		f'/data/3D/IMC_3D/florida-3d-imc/a296c763352828159f3adfa495becf3e/original/mask_{method}_{axis}.pkl',
+		f'../data/masks/IMC_3D/florida-3d-imc/a296c763352828159f3adfa495becf3e/original/mask_{method}_{axis}.pkl',
 		'r'))
 	# cell_2D = pickle.load(bz2.BZ2File(
 	# f'/data/3D/IMC_3D/florida-3d-imc/a296c763352828159f3adfa495becf3e/original/mask_{method}_matched_stack_{axis}_0.0.pkl',
 	# 'r')).astype(np.int64)
 	if axis == 'XY':
-		cell_2D = cell_2D[20:30, 300:750, 300:750]
+		cell_2D = cell_2D[20:30, 500:550, 500:550]
 		cell_2D = np.flip(cell_2D, axis=0)
 		aspect_ratio = 1
 	elif axis == 'YZ':
@@ -119,9 +120,11 @@ for axis in axes:
 			labelleft=False  # labels along the left edge are off
 		)
 		
-		plt.savefig(f'/home/hrchen/Documents/Research/hubmap/script/2D-3D/fig/2D_{axis}_{i}', bbox_inches='tight', dpi=100,
+		plt.savefig(f'../fig/Fig_1_B_2D_{axis}', bbox_inches='tight', dpi=100,
 		            pad_inches=0, transparent=True)
 		plt.clf()
+		
+print('completed!')
 
 
 

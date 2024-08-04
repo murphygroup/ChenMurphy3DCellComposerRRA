@@ -7,6 +7,7 @@ import random
 
 random.seed(12)
 
+print('plotting figure 1 D...')
 
 def get_indices_pandas(data):
 	d = data.ravel()
@@ -45,7 +46,7 @@ def color_cells(segmentation, cell_coords, cmap):
 	
 	cell_num = 1
 	for label in cell_coords.index:
-		print(cell_num)
+		# print(cell_num)
 		cell_num += 1
 		available_colors = set(cmap)
 		
@@ -75,7 +76,7 @@ method = 'deepcell_membrane-0.12.6'
 axis = 'XY'
 
 segmentation = pickle.load(bz2.BZ2File(
-	f'/data/3D/IMC_3D/florida-3d-imc/a296c763352828159f3adfa495becf3e/original/mask_{method}_matched_3D_final_0.0.pkl',
+	f'../data/masks/IMC_3D/florida-3d-imc/a296c763352828159f3adfa495becf3e/original/mask_{method}_matched_3D_final_0.0.pkl',
 	'r')).astype(np.int64)
 # segmentation = segmentation[:10,350:400,350:400]
 if axis == 'XY':
@@ -144,10 +145,11 @@ ax.grid(False)
 ax.set_xticks([])
 ax.set_yticks([])
 ax.set_zticks([])
-ax.set_frame_on(False)
+# ax.set_frame_on(False)
 
-plt.savefig(f'/home/hrchen/Documents/Research/hubmap/script/2D-3D/fig/3D_final_cells', bbox_inches='tight',
+plt.savefig(f'../fig/Fig_1_D_3D_final_cells', bbox_inches='tight',
             pad_inches=0,
             transparent=True)
 plt.clf()
 
+print('completed!')

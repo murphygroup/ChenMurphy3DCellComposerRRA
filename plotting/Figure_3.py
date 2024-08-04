@@ -10,9 +10,11 @@ import sys
 import umap
 import pandas as pd
 if __name__ == '__main__':
+	
+	print('plotting Fig 3...')
 
-	data_dir = f'./data/IMC_3D/florida-3d-imc'
-	pca_dir = './data/PCA_model'
+	data_dir = f'../data/masks/IMC_3D/florida-3d-imc'
+	pca_dir = '../data/PCA_model'
 	cmap = ['deepskyblue', 'darkred', 'darkgoldenrod', 'darkkhaki', 'darkslateblue', 'darksalmon', 'chocolate', 'darkgoldenrod', 'darkcyan', 'darkgrey']
 	marker = ["o", "o", "s", "^", "P", "D", "*", "X", "h", "v", "d", "p"]
 
@@ -33,14 +35,14 @@ if __name__ == '__main__':
 	for method in methods:
 		avg_method_metrics_pca_pieces = list()
 		for noise in noise_list:
-			print(method)
-			print(noise)
+			# print(method)
+			# print(noise)
 			if method in methods_2D:
 				metrics_dir_list = list()
 				img_dir_list = sorted(glob.glob(f'{data_dir}/**/original', recursive=True))
 				for img_dir in img_dir_list:
 					optimal_JI = np.load(f'{img_dir}/metrics/optimal_JI_{method}.npy')
-					print(optimal_JI)
+					# print(optimal_JI)
 					metrics_dir_list.append(f'{os.path.dirname(img_dir)}/{noise}/metrics/metrics_{method}_{optimal_JI}.npy')
 			else:
 				metrics_dir_list = sorted(glob.glob(f'{data_dir}/**/{noise}/**/metrics_{method}_0.0.npy', recursive=True))
@@ -53,7 +55,7 @@ if __name__ == '__main__':
 			current_metrics = np.vstack(current_metrics_pieces)
 			current_metrics_z = ss.transform(current_metrics)
 			current_metrics_pca = pca_model.transform(current_metrics_z)
-			print(current_metrics)
+			# print(current_metrics)
 			
 
 			avg_current_metrics_pca = np.average(current_metrics_pca, axis=0)
@@ -76,7 +78,7 @@ if __name__ == '__main__':
 	plt.xlabel(f'PC1({pc1_explained})')
 	plt.ylabel(f'PC2({pc2_explained})')
 
-	plt.savefig(f'{os.path.dirname(pca_dir)}/fig/IMC_PCA.png', dpi=500, bbox_inches='tight')
+	plt.savefig(f'../fig/Fig_3_IMC_PCA.png', dpi=500, bbox_inches='tight')
 	plt.clf()
 	
 	# Sort the data
@@ -98,7 +100,7 @@ if __name__ == '__main__':
 	
 	# Add the real bars again
 	plt.barh(methods_vis_sorted, weighted_score_list_sorted, color=colors_sorted)
-	print(weighted_score_list)
+	# print(weighted_score_list)
 	# Label the axes
 	plt.xlabel('Quality Score')
 	plt.ylabel('Methods')
@@ -106,10 +108,10 @@ if __name__ == '__main__':
 	plt.legend(handles=[bar1, bar2], title=None, loc=4)
 	
 	# Save the plot
-	plt.savefig(f'{os.path.dirname(pca_dir)}/fig/IMC_score.png', dpi=500, bbox_inches='tight')
+	plt.savefig(f'../fig/Fig_3_IMC_score.png', dpi=500, bbox_inches='tight')
 	
 	# Clear the plot for future use
 	plt.clf()
 
-
+	print('completed!')
 	

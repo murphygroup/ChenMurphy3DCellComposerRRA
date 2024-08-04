@@ -5,6 +5,7 @@ from skimage import measure
 from skimage.io import imsave
 import pandas as pd
 
+print("creating blender's mesh files for Figure 2...")
 
 methods = ['deepcell_membrane-0.12.6', 'CellProfiler', 'cellpose-2.2.2_2D-3D', '3DCellSeg']
 # methods = ['deepcell_membrane-0.12.6']
@@ -12,7 +13,7 @@ methods = ['deepcell_membrane-0.12.6', 'CellProfiler', 'cellpose-2.2.2_2D-3D', '
 def write_to_mtl(materials, filename):
 	with open(filename, 'w') as f:
 		for material_id, color in materials.items():
-			print(material_id)
+			# print(material_id)
 			f.write(f'newmtl Color_{material_id}\n')
 			f.write(f'Kd {color[0]} {color[1]} {color[2]}\n')  # Diffuse color
 
@@ -20,7 +21,7 @@ def write_to_mtl(materials, filename):
 def write_to_obj(verts, faces, groups, colors, filename):
 	with open(filename, 'w') as f:
 		f.write(
-			f'mtllib /data/3D/IMC_3D/florida-3d-imc/d3130f4a89946cc6b300b115a3120b7a/original/cell_mesh_{method}.mtl\n')
+			f'mtllib ../data/masks/IMC_3D/florida-3d-imc/d3130f4a89946cc6b300b115a3120b7a/original/cell_mesh_{method}.mtl\n')
 		
 		# Write vertices
 		for v in verts:
@@ -42,8 +43,8 @@ def write_to_obj(verts, faces, groups, colors, filename):
 				last_group = group
 				# print(group)
 				f.write(f'usemtl Color_{color}\n')
-				if color == 0:
-					print(face_idx)
+				# if color == 0:
+				# 	print(face_idx)
 			
 			# print(group_number != last_group)
 			# Write the face
@@ -76,14 +77,14 @@ def triangulate_2D_contour(contour):
 for method in methods:
 	try:
 		mask = pickle.load(bz2.BZ2File(
-			f'/data/3D/IMC_3D/florida-3d-imc/a296c763352828159f3adfa495becf3e/original/mask_{method}_matched_3D_final_0.3.pkl',
+			f'../data/masks/IMC_3D/florida-3d-imc/a296c763352828159f3adfa495becf3e/original/mask_{method}_matched_3D_final_0.3.pkl',
 			'r')).astype(np.int64)
 	except:
 		mask = pickle.load(bz2.BZ2File(
-			f'/data/3D/IMC_3D/florida-3d-imc/a296c763352828159f3adfa495becf3e/original/mask_{method}_matched_3D_final_0.0.pkl',
+			f'../data/masks/IMC_3D/florida-3d-imc/a296c763352828159f3adfa495becf3e/original/mask_{method}_matched_3D_final_0.0.pkl',
 			'r')).astype(np.int64)
 	mask_colored = pickle.load(bz2.BZ2File(
-		f'/data/3D/IMC_3D/florida-3d-imc/a296c763352828159f3adfa495becf3e/original/mask_{method}_matched_3D_final_colored.pkl',
+		f'../data/masks/IMC_3D/florida-3d-imc/a296c763352828159f3adfa495becf3e/original/mask_{method}_matched_3D_final_colored.pkl',
 		'r')).astype(np.int64)
 	# data = np.zeros(mask.shape, dtype=np.int16)
 	# cell_id_max = len(cell_coords)
@@ -106,7 +107,7 @@ for method in methods:
 	offset = 0  # To keep track of the index offset for faces when combining multiple cells
 	
 	for cell_index in cell_coords.index:
-		print(cell_index)
+		# print(cell_index)
 		current_coords = cell_coords[cell_index]
 		current_mask = np.zeros(data.shape)
 		current_mask[current_coords] = 2
@@ -168,9 +169,11 @@ for method in methods:
 		8: (0.5, 0.0, 0.5),
 		9: (0.6, 0.2, 0.2)
 	}
-	write_to_mtl(color_map, f"/data/3D/IMC_3D/florida-3d-imc/a296c763352828159f3adfa495becf3e/original/cell_mesh_{method}.mtl")
+	write_to_mtl(color_map, f"../fig/cell_mesh_{method}.mtl")
 	
 	
 	
 	write_to_obj(all_verts, all_faces, all_groups, all_colors,
-				 f"/data/3D/IMC_3D/florida-3d-imc/a296c763352828159f3adfa495becf3e/original/cell_mesh_{method}.obj")
+				 f"../fig/Fig_2_cell_mesh_{method}.obj")
+	
+print('completed!')

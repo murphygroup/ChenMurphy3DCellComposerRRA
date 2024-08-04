@@ -13,7 +13,7 @@ import pandas as pd
 if __name__ == '__main__':
 	channel_list = ['actin', 'lysosome', 'golgi', 'tublin', 'mito']
 	channel_list_vis = ['Actin filaments', 'Lysosome', 'Golgi apparatus', 'Microtubule', 'Mitochondria']
-	pca_dir = './data/PCA_model'
+	pca_dir = '../data/PCA_model'
 	cmap = ['deepskyblue', 'darkred', 'darkgoldenrod', 'darkkhaki', 'darkslateblue', 'darksalmon', 'chocolate',
 	        'darkcyan', 'darkgrey']
 	marker = ["o", "s", "^", "P", "D", "*", "X", "h", "v", "d", "p"]
@@ -28,7 +28,7 @@ if __name__ == '__main__':
 	
 	weighted_score_list = []
 	for channel in channel_list:
-		data_dir = f'/data/3D/AICS/AICS_{channel}'
+		data_dir = f'../data/masks/AICS/AICS_{channel}'
 		weighted_score_channel_list = []
 		
 		for method in methods:
@@ -87,7 +87,7 @@ if __name__ == '__main__':
 	lower_right_legend = mlegend.Legend(ax, handles=marker_handles, labels=channel_list_vis, loc='lower right')
 	ax.add_artist(lower_right_legend)
 	plt.tight_layout()
-	plt.savefig(f'{os.path.dirname(pca_dir)}/fig/ACSS_original_PCA.png', dpi=500)
+	plt.savefig(f'../fig/Fig_4_ACSS_original_PCA.png', dpi=500)
 	plt.clf()
 	
 	weighted_score_list = np.vstack(weighted_score_list)
@@ -98,4 +98,4 @@ if __name__ == '__main__':
 	plt.xlabel('Quality Score')
 	plt.legend(loc='upper center', bbox_to_anchor=(0.4, -0.1), ncol=3)
 	plt.tight_layout()
-	plt.savefig(f'{os.path.dirname(pca_dir)}/fig/ACSS_original_scores.png', dpi=500)
+	plt.savefig(f'../fig/Fig_4_ACSS_original_scores.png', dpi=500)

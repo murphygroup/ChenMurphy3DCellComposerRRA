@@ -7,8 +7,8 @@ from os.path import join
 import os
 
 if __name__ == '__main__':
-	
-	data_dir = './data/IMC_3D/florida-3d-imc'
+	print('generating Supp Table 7...')
+	data_dir = '../data/IMC_3D/florida-3d-imc'
 	methods_2D = ['deepcell_membrane-0.12.6', 'deepcell_cytoplasm-0.12.6', 'cellpose-2.2.2', 'aics_classic',
 	              'CellProfiler', 'CellX', 'cellsegm']
 	methods_vis = ['DeepCell_mem', 'DeepCell_cyto', 'Cellpose', 'ACSS(classic)', 'CellProfiler', 'CellX',
@@ -68,4 +68,5 @@ if __name__ == '__main__':
 		cell_counts_df.index.name = 'Number of cells / Method'
 		
 
-		cell_counts_df.to_csv(f'./table/cell_counts_{img_name}.csv')
+		cell_counts_df.to_csv(f'../table/Supp_Table_7_cell_counts_{img_name}.csv')
+		print('completed!')
