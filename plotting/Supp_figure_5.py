@@ -8,9 +8,10 @@ import matplotlib.patches as patches
 
 
 if __name__ == '__main__':
+	print('plotting Supp Fig 5...')
 	channel_list = ['actin','lysosome','golgi','tublin','mito']
 	channel_list_vis = ['Actin filaments','Lysosome','Golgi apparatus','Microtubule','Mitochondria']
-	pca_dir = './data/PCA_model'
+	pca_dir = '../data/PCA_model'
 	cmap = ['deepskyblue', 'darkred', 'darkgoldenrod', 'darkkhaki', 'darkslateblue', 'darksalmon', 'chocolate', 'darkgoldenrod', 'darkcyan', 'darkgrey']
 	marker = ["o", "s", "^", "P", "D", "*", "X", "h", "v", "d", "p"]
 	methods = ['deepcell_membrane-0.12.6', 'cellpose-2.2.2', 'aics_ml']
@@ -21,7 +22,7 @@ if __name__ == '__main__':
 	pc2_explained = "{:.0f}%".format(pca.explained_variance_ratio_[1] * 100)
 	
 	for channel in channel_list:
-		data_dir = f'./data/AICS/AICS_{channel}'
+		data_dir = f'../data/masks/AICS/AICS_{channel}'
 
 		weighted_score_list = []
 		for method in methods:
@@ -33,7 +34,6 @@ if __name__ == '__main__':
 					img_dir_list = sorted(glob.glob(f'{data_dir}/**/original', recursive=True))
 					for img_dir in img_dir_list:
 						optimal_JI = np.load(f'{img_dir}/metrics/optimal_JI_{method}.npy')
-						print(optimal_JI)
 						metrics_dir_list.append(
 							f'{os.path.dirname(img_dir)}/{noise}/metrics/metrics_{method}_{optimal_JI}.npy')
 				else:
@@ -80,6 +80,6 @@ if __name__ == '__main__':
 	# Add the legend to the plot
 	plt.legend(handles=color_handles + marker_handles, loc='upper left')
 	plt.tight_layout()
-	plt.savefig(f'{os.path.dirname(pca_dir)}/fig/AICS_all_PCA.png', dpi=500)
+	plt.savefig(f'../fig/Supp_Fig_5_ACSS_all_PCA.png', dpi=500)
 	plt.clf()
-	
+	print('completed!')

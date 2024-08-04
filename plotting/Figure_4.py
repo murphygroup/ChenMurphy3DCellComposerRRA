@@ -10,6 +10,8 @@ import matplotlib.patches as patches
 import matplotlib.legend as mlegend
 import pandas as pd
 
+print('plotting Fig 4...')
+
 if __name__ == '__main__':
 	channel_list = ['actin', 'lysosome', 'golgi', 'tublin', 'mito']
 	channel_list_vis = ['Actin filaments', 'Lysosome', 'Golgi apparatus', 'Microtubule', 'Mitochondria']
@@ -21,7 +23,7 @@ if __name__ == '__main__':
 	methods_vis = ['3DCellComposer w/ DeepCell', '3DCellComposer w/ Cellpose', 'ACSS']
 	noise_list = ['original']
 	
-	ss, pca = pickle.load(open(join(pca_dir, 'pca_ACSS.pkl'), 'rb'))
+	ss, pca = pickle.load(open(join(pca_dir, 'pca_AICS.pkl'), 'rb'))
 	pc1_explained = "{:.0f}%".format(pca.explained_variance_ratio_[0] * 100)
 	pc2_explained = "{:.0f}%".format(pca.explained_variance_ratio_[1] * 100)
 	fig, ax = plt.subplots()
@@ -99,3 +101,4 @@ if __name__ == '__main__':
 	plt.legend(loc='upper center', bbox_to_anchor=(0.4, -0.1), ncol=3)
 	plt.tight_layout()
 	plt.savefig(f'../fig/Fig_4_ACSS_original_scores.png', dpi=500)
+	print('completed!')

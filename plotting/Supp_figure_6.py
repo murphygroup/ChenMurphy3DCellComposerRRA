@@ -4,15 +4,17 @@ import glob
 import random
 random.seed(3)
 
+print('plotting Supp Fig 6...')
 data_type = 'AICS'
-data_dir = f'./data/{data_type}'
+data_dir = f'../data/masks/{data_type}'
 AICS_structure_list = ['golgi', 'mito', 'tublin', 'actin', 'lysosome']
 AICS_structure_list_vis = ['Golgi apparatus', 'Mitochondria', 'Microntubules', 'Alpha-actin', 'Lysosomes']
-figure_dir = './fig'
+figure_dir = '../fig'
 
 # Create a figure and a set of subplots - 2 rows, 3 columns
 fig, axs = plt.subplots(2, 3, figsize=(15, 10))  # Adjust figsize as needed
 
+JI_list_list = []
 for i, AICS_structure in enumerate(AICS_structure_list):
     # Find the subplot location
     ax1 = axs[i//3, i%3]
@@ -63,5 +65,6 @@ axs[1, 2].axis('off')
 plt.tight_layout()
 
 # Save the figure
-plt.savefig(f'{figure_dir}/{data_type}_JI_vs_cell_num.png', dpi=500)
+plt.savefig(f'../fig/Supp_Fig_6_{data_type}_JI_vs_cell_num.png', dpi=500)
 plt.close(fig)
+print('completed!')

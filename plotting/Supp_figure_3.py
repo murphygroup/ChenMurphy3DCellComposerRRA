@@ -7,7 +7,7 @@ random.seed(3)
 print('plotting Supp Fig 3...')
 
 data_type = 'IMC_3D'
-data_dir = f'../data/metrics/{data_type}'
+data_dir = f'../data/masks/{data_type}'
 IMC_structure_list = ['d3130f4a89946cc6b300b115a3120b7a','cd880c54e0095bad5200397588eccf81','a296c763352828159f3adfa495becf3e']
 IMC_structure_list_vis = ['SPLEEN', 'Thymus','Lymph Node']
 figure_dir = '../fig'
@@ -15,6 +15,7 @@ figure_dir = '../fig'
 # Create a figure and a set of subplots - 2 rows, 3 columns
 fig, axs = plt.subplots(1, 3, figsize=(15, 5))  # Adjust figsize as needed
 
+JI_list_list = []
 for i, IMC_structure in enumerate(IMC_structure_list):
     # Find the subplot location
     ax1 = axs[i]
@@ -22,7 +23,7 @@ for i, IMC_structure in enumerate(IMC_structure_list):
     mask_dir_list = sorted(glob.glob(f'{data_dir}/**/{IMC_structure}/**/original', recursive=True))
     mask_dir = random.choice(mask_dir_list)
     method = 'deepcell_membrane-0.12.6'
-
+	
     for axis in ['XY', 'XZ','YZ']:
         JI_list_image = np.load(f'{mask_dir}/best_JI_list_{axis}.npy').tolist()
         JI_list_list = JI_list_list + JI_list_image
@@ -65,3 +66,4 @@ plt.tight_layout()
 # Save the figure
 plt.savefig(f'{figure_dir}/Supp_Fig_3_{data_type}_JI_vs_cell_num.png', dpi=500)
 plt.close(fig)
+print('completed!')

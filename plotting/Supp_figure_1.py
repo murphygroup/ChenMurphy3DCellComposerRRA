@@ -124,7 +124,7 @@ if dual_color:
     cropped_cell_mask_repair[mask_no_repair_coords] = color_idx
 
 repaired_coords = np.where(cropped_cell_mask_repair != 0)
-create_slice_fig_new(cropped_cell_mask_no_repair, 'fragment', vis_coords, repaired_coords, mask_repair[Z, Y, X])
+# create_slice_fig_new(cropped_cell_mask_no_repair, 'fragment', vis_coords, repaired_coords, mask_repair[Z, Y, X])
 create_slice_fig_new(cropped_cell_mask_repair, 'repaired', vis_coords)
 create_slice_fig_new(cropped_cell_mask_XY, 'Z_stack', vis_coords)
 create_slice_fig_new(cropped_cell_mask_XZ, 'Y_stack', vis_coords)

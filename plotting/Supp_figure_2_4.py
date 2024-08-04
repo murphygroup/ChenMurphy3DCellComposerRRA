@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 print('plotting Supp Fig 2 and Fig 4...')
 
 if __name__ == '__main__':
-	data_dir = '../data/metrics'
+	data_dir = '../data/masks'
 	datasets = ['IMC_3D', 'AICS']
 	pca_dir = '../data/PCA_model'
 	methods_IMC = ['deepcell_membrane-0.12.6', 'deepcell_cytoplasm-0.12.6', 'cellpose-2.2.2', 'aics_classic', 'CellProfiler', 'CellX',
@@ -26,9 +26,9 @@ if __name__ == '__main__':
 			methods = methods_AICS
 		for method in methods:
 			if method in methods_2D:
-				metrics_dir_list = metrics_dir_list + sorted(glob.glob(f'{data_dir}/{dataset}/**/metrics_{method}_0.*.npy', recursive=True))
+				metrics_dir_list = metrics_dir_list + sorted(glob.glob(f'{data_dir}/{dataset}/**/metrics/metrics_{method}_0.*.npy', recursive=True))
 			else:
-				metrics_dir_list = metrics_dir_list + sorted(glob.glob(f'{data_dir}/{dataset}/**/metrics_{method}_0.0.npy', recursive=True))
+				metrics_dir_list = metrics_dir_list + sorted(glob.glob(f'{data_dir}/{dataset}/**/metrics/metrics_{method}_0.0.npy', recursive=True))
 		metrics_pieces = list()
 		for metrics_dir in metrics_dir_list:
 			current_metrics = np.load(metrics_dir)
