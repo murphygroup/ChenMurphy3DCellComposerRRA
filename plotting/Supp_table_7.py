@@ -8,7 +8,7 @@ import os
 
 if __name__ == '__main__':
 	print('generating Supp Table 7...')
-	data_dir = '../data/IMC_3D/florida-3d-imc'
+	data_dir = '../data/masks/IMC_3D/florida-3d-imc'
 	methods_2D = ['deepcell_membrane-0.12.6', 'deepcell_cytoplasm-0.12.6', 'cellpose-2.2.2', 'aics_classic',
 	              'CellProfiler', 'CellX', 'cellsegm']
 	methods_vis = ['DeepCell_mem', 'DeepCell_cyto', 'Cellpose', 'ACSS(classic)', 'CellProfiler', 'CellX',
@@ -22,31 +22,36 @@ if __name__ == '__main__':
 	
 	# Initialize an empty dictionary to hold cell count data
 	
-	for img_dir in img_dir_list[:1]:
-		print(img_dir)
+	for img_dir in img_dir_list:
+		# print(img_dir)
 		cell_counts_data = {method: [] for method in methods_2D}
 		
 		img_name = img_dir.split('/')[-2]
+		if img_name == 'a296c763352828159f3adfa495becf3e':
+			tissue = 'lymph_node'
+		if img_name == 'cd880c54e0095bad5200397588eccf81':
+			tissue = 'thymus'
+		if img_name == 'd3130f4a89946cc6b300b115a3120b7a':
+			tissue = 'spleen'
 		for method in methods_2D:
 			optimal_JI = np.load(f'{img_dir}/metrics/optimal_JI_{method}.npy')
-			img_dir_store = img_dir.replace("IMC_3D", "IMC_3D_store")
 			
 			cell_counts_img_2D = []
 			cell_counts_img_prelim_3D = []
 			for axis in ['XY', 'XZ', 'YZ']:
-				img_2D_path = f'{img_dir_store}/mask_{method}_{axis}.pkl'
+				img_2D_path = f'{img_dir}/mask_{method}_{axis}.pkl'
 				img_2D = load_pkl(img_2D_path)
 				cell_counts_img_2D.append(sum(len(np.unique(x)) - 1 for x in img_2D))
 				
-				img_prelim_3D_path = f'{img_dir_store}/mask_{method}_matched_stack_{axis}_{optimal_JI}.pkl'
+				img_prelim_3D_path = f'{img_dir}/mask_{method}_matched_stack_{axis}_{optimal_JI}.pkl'
 				img_prelim_3D = load_pkl(img_prelim_3D_path)
 				cell_counts_img_prelim_3D.append(len(np.unique(img_prelim_3D)) - 1)
 			
-			img_before_nuclear_matching_path = f'{img_dir_store}/mask_{method}_matched_3D_{optimal_JI}.pkl'
+			img_before_nuclear_matching_path = f'{img_dir}/mask_{method}_matched_3D_{optimal_JI}.pkl'
 			img_before_nuclear_matching = load_pkl(img_before_nuclear_matching_path)
 			cell_counts_img_before_nuclear_matching = len(np.unique(img_before_nuclear_matching)) - 1
 			
-			img_after_nuclear_matching_path = f'{img_dir_store}/mask_{method}_matched_3D_final_{optimal_JI}.pkl'
+			img_after_nuclear_matching_path = f'{img_dir}/mask_{method}_matched_3D_final_{optimal_JI}.pkl'
 			img_after_nuclear_matching = load_pkl(img_after_nuclear_matching_path)
 			cell_counts_img_after_nuclear_matching = len(np.unique(img_after_nuclear_matching)) - 1
 			
@@ -68,5 +73,5 @@ if __name__ == '__main__':
 		cell_counts_df.index.name = 'Number of cells / Method'
 		
 
-		cell_counts_df.to_csv(f'../table/Supp_Table_7_cell_counts_{img_name}.csv')
-		print('completed!')
+		cell_counts_df.to_csv(f'../table/Supp_Table_7_cell_counts_{tissue}.csv')
+	print('completed!')
