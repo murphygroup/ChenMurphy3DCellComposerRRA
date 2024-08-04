@@ -115,6 +115,8 @@ if __name__ == '__main__':
 
 	img = pickle.load(bz2.BZ2File(f'{data_dir}/mask_{method}_{axis}.pkl', 'r'))
 	new_img = [img[0]]
+	best_JI_list = []
+	
 	for slice_num in range(1, img.shape[0]):
 		print("Matching", slice_num)
 		img_current_slice = new_img[slice_num-1].astype(int)
@@ -152,10 +154,11 @@ if __name__ == '__main__':
 					new_slice_cell_matched_list.append(new_slice_cell_best)
 					current_slice_cell_matched_index_list.append(i_ind)
 					new_slice_cell_matched_index_list.append(j_ind)
-		
+					best_JI_list.append(best_JI)
 		
 		new_slice_cell_unmatched_list, new_slice_cell_unmatched_index_list = get_unmatched_list(new_slice_cell_matched_index_list, len(new_slice_cell_coords))
 		new_slice_updated_mask = get_new_slice_mask(current_slice_cell_matched_index_list, new_slice_cell_matched_list, new_slice_cell_unmatched_list, len(np.unique(new_img[:slice_num])))
 		new_img.append(new_slice_updated_mask)
 	new_img = np.stack(new_img, axis=0)
 	pickle.dump(new_img, bz2.BZ2File(f'{data_dir}/mask_{method}_matched_stack_{axis}_{JI_thre}.pkl', 'w'))
+	np.save(f'{data_dir}/best_JI_list_{axis}.npy', best_JI_list)
