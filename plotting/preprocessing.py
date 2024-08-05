@@ -5,7 +5,10 @@ from os.path import join
 import os
 import shutil
 import time
+import sys
+import subprocess
 
+run_mode = sys.argv[1]
 print('check necessary files for plotting figures...')
 time.sleep(1)
 
@@ -118,9 +121,15 @@ def create_optimal_JI_files(data_type):
 				optimal_JI_method_image = JI_list[np.argmax(weighted_score)]
 				np.save(f'{img_dir}/metrics/optimal_JI_{method}.npy', optimal_JI_method_image)
 				np.save(f'{img_dir}/metrics/quality_scores_JI_{method}.npy', weighted_score)
-				
-move_metrics()
-move_supp_data()
-create_optimal_JI_files('IMC_3D')
-create_optimal_JI_files('AICS')
-print('completed!')
+
+if __name__ == '__main__':
+	
+	if run_mode == 'standalone':
+		move_metrics()
+		move_supp_data()
+	if run_mode == 'full_pipeline':
+		subprocess.run(["python", 'Supp_figure_pre.py'])
+		
+	create_optimal_JI_files('IMC_3D')
+	create_optimal_JI_files('AICS')
+	print('completed!')

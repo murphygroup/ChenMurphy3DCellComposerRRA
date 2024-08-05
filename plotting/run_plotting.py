@@ -1,7 +1,11 @@
 import subprocess
 import os
 import time
+import sys
+
 plotting_dir = os.path.dirname(os.path.abspath(__file__))
+
+run_mode = 'standalone' # 'full_pipeline' (full RRA) or 'standalone' (only plotting)
 
 os.chdir(plotting_dir)
 
@@ -22,8 +26,11 @@ if not os.path.exists('../fig'):
 if not os.path.exists('../table'):
     os.makedirs('../table')
 
+
+
+subprocess.run(["python", 'preprocessing.py', run_mode])
+
 scripts = [
-	"preprocessing.py",
     "Figure_1_B.py",
     "Figure_1_C.py",
     "Figure_1_D.py",
@@ -39,6 +46,7 @@ scripts = [
     "Supp_figure_6.py",
     "Supp_table_7.py"
 ]
+
 
 for script_path in scripts:
     subprocess.run(["python", script_path])
